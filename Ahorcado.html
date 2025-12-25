@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Juego del Ahorcado</title>
+</head>
+
+<body style="font-family: Arial; text-align: center;">
+
+<h1>🎯 Juego del Ahorcado</h1>
+
+<canvas id="ahorcado" width="200" height="250" style="border:1px solid black;"></canvas>
+
+<p id="palabra"></p>
+<p>Intentos restantes: <span id="intentos">6</span></p>
+
+<input type="text" id="letra" maxlength="1">
+<button onclick="adivinar()">Probar letra</button>
+
+<p id="mensaje"></p>
+
+<script>
+const palabras = [
+  "PUEBLA",
+  "JUSTICIA",
+  "LIBERTAD",
+  "MUJERES",
+  "DERECHOS",
+  "IGUALDAD",
+  "DIGNIDAD"
+];
+
+let palabraSecreta = "";
+let letrasAdivinadas = [];
+let intentos = 6;
+
+const canvas = document.getElementById("ahorcado");
+const ctx = canvas.getContext("2d");
+
+function elegirPalabra() {
+  return palabras[Math.floor(Math.random() * palabras.length)];
+}
+
+function nuevaPartida() {
+  palabraSecreta = elegirPalabra();
+  letrasAdivinadas = [];
+  intentos = 6;
+
+  document.getElementById("intentos").innerText = intentos;
+  document.getElementById("mensaje").innerText = "";
+
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  dibujarBase();
+  mostrarPalabra();
+}
+
+function mostrarPalabra() {
+  let texto = "";
+  for (let letra of palabraSecreta) {
+    texto += letrasAdivinadas.includes(letra) ? letra + " " : "_ ";
+  }
+  document.getElementById("palabra").innerText = texto;
+}
+
+function adivinar() {
+  let letra = document.getElementById("letra").value.toUpperCase();
+  document.getElementById("letra").value = "";
+
+  if (!letra || letrasAdivinadas.includes(letra)) return;
+
+  letrasAdivinadas.push(letra);
+
+  if (!palabraSecreta.includes(letra)) {
+    intentos--;
+    document.getElementById("intentos").innerText = intentos;
+    dibujarAhorcado();
+  }
+
+  mostrarPalabra();
+
+  if (!document.getElementById("palabra").innerText.includes("_")) {
+    document.getElementById("mensaje").innerText = "🎉 ¡Ganaste! Nueva palabra...";
+    setTimeout(nuevaPartida, 1200);
+  }
+
+  if (intentos === 0) {
+    document.getElementById("mensaje").innerText =
+      "😢 Perdiste. Era: " + palabraSecreta;
+    setTimeout(nuevaPartida, 1800);
+  }
+}
+
+function dibujarBase() {
+  ctx.beginPath();
+  ctx.moveTo(10, 240);
+  ctx.lineTo(190, 240);
+  ctx.moveTo(50, 240);
+  ctx.lineTo(50, 20);
+  ctx.lineTo(130, 20);
+  ctx.lineTo(130, 40);
+  ctx.stroke();
+}
+
+function dibujarAhorcado() {
+  ctx.beginPath();
+  switch (intentos) {
+    case 5: ctx.arc(130, 60, 20, 0, Math.PI * 2); break;
+    case 4: ctx.moveTo(130, 80); ctx.lineTo(130, 140); break;
+    case 3: ctx.moveTo(130, 100); ctx.lineTo(100, 120); break;
+    case 2: ctx.moveTo(130, 100); ctx.lineTo(160, 120); break;
+    case 1: ctx.moveTo(130, 140); ctx.lineTo(110, 180); break;
+    case 0: ctx.moveTo(130, 140); ctx.lineTo(150, 180); break;
+  }
+  ctx.stroke();
+}
+
+nuevaPartida();
+</script>
+
+</body>
+</html>

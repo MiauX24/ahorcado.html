@@ -1,0 +1,16 @@
+{
+  "name": "Juego del Ahorcado",
+  "short_name": "Ahorcado",
+  "start_url": "ahorcado.html",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#4a148c",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    }
+  ]
+}
